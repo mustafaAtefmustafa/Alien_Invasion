@@ -1,5 +1,5 @@
+from distutils.log import FATAL
 import sys
-from xml.etree.ElementTree import QName
 import pygame as p
 from settings import Settings
 from ship import Ship
@@ -22,6 +22,7 @@ class AlienInvasion:
         while True:
             # Watch for keyboard and mouse events
             self._check_events()
+            self.ship.update()
             self._update_screen()
 
 
@@ -30,8 +31,30 @@ class AlienInvasion:
         for event in p.event.get():
             if event.type == p.QUIT:
                 sys.exit()
+            elif event.type == p.KEYDOWN:
+                if event.key == p.K_RIGHT:
+                    # Move the ship to the right
+                    self.ship.moving_right = True
+                elif event.key ==p.K_LEFT:
+                    # Move the ship to the left
+                    self.ship.moving_left = True
+                elif event.key ==p.K_UP:
+                    # Move the ship up
+                    self.ship.moving_up = True
+                elif event.key ==p.K_DOWN:
+                    # Move the ship down
+                    self.ship.moving_down = True
+            elif event.type == p.KEYUP:
+                if event.key == p.K_RIGHT:
+                    self.ship.moving_right = False
+                elif event.key ==p.K_LEFT:
+                    self.ship.moving_left = False
+                elif event.key ==p.K_UP:
+                    self.ship.moving_up = False
+                elif event.key ==p.K_DOWN:
+                    self.ship.moving_down = False
 
-
+                    
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)

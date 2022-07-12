@@ -32,29 +32,38 @@ class AlienInvasion:
             if event.type == p.QUIT:
                 sys.exit()
             elif event.type == p.KEYDOWN:
-                if event.key == p.K_RIGHT:
-                    # Move the ship to the right
-                    self.ship.moving_right = True
-                elif event.key ==p.K_LEFT:
-                    # Move the ship to the left
-                    self.ship.moving_left = True
-                elif event.key ==p.K_UP:
-                    # Move the ship up
-                    self.ship.moving_up = True
-                elif event.key ==p.K_DOWN:
-                    # Move the ship down
-                    self.ship.moving_down = True
+                self._check_keydown_events(event)
             elif event.type == p.KEYUP:
-                if event.key == p.K_RIGHT:
-                    self.ship.moving_right = False
-                elif event.key ==p.K_LEFT:
-                    self.ship.moving_left = False
-                elif event.key ==p.K_UP:
-                    self.ship.moving_up = False
-                elif event.key ==p.K_DOWN:
-                    self.ship.moving_down = False
+                self._check_keyup_events(event)
 
-                    
+    def _check_keydown_events(self, event):
+        """Responds to keypresses."""
+        if event.key == p.K_RIGHT:
+            # Move the ship to the right
+            self.ship.moving_right = True
+        elif event.key ==p.K_LEFT:
+            # Move the ship to the left
+            self.ship.moving_left = True
+        elif event.key ==p.K_UP:
+            # Move the ship up
+            self.ship.moving_up = True
+        elif event.key ==p.K_DOWN:
+            # Move the ship down
+            self.ship.moving_down = True
+        elif event.key == p.K_q:
+            sys.exit()
+
+    def _check_keyup_events(self, event):
+        """Responds to key releases."""
+        if event.key == p.K_RIGHT:
+            self.ship.moving_right = False
+        elif event.key ==p.K_LEFT:
+            self.ship.moving_left = False
+        elif event.key ==p.K_UP:
+            self.ship.moving_up = False
+        elif event.key ==p.K_DOWN:
+            self.ship.moving_down = False
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)

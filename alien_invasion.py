@@ -110,6 +110,16 @@ class AlienInvasion:
         """Update position of bullets and get rid of old bullets."""
         self.bullets.update()
 
+        # Check for collisions between bullets and aliens
+        # Then remove both of them.
+        collisions = p.sprite.groupcollide(self.bullets, self.aliens,
+        True, True)
+        
+        # When the entire fleet dies, remove bullets and create new fleet.
+        if not self.aliens:
+            self.bullets.empty()
+            self._create_fleet()
+
         # Get rid of bullets that have disappeared.
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:

@@ -111,6 +111,16 @@ class AlienInvasion:
         self.bullets.update()
 
         # Check for collisions between bullets and aliens
+        self._check_bullet_alien_collisions()
+        # Get rid of bullets that have disappeared.
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+        # print(len(self.bullets))
+
+    
+    def _check_bullet_alien_collisions(self):
+        """Respond to bullet-alien collision"""
         # Then remove both of them.
         collisions = p.sprite.groupcollide(self.bullets, self.aliens,
         True, True)
@@ -120,11 +130,6 @@ class AlienInvasion:
             self.bullets.empty()
             self._create_fleet()
 
-        # Get rid of bullets that have disappeared.
-        for bullet in self.bullets.copy():
-            if bullet.rect.bottom <= 0:
-                self.bullets.remove(bullet)
-        # print(len(self.bullets))
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""

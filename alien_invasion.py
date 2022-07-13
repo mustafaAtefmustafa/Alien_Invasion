@@ -1,9 +1,11 @@
+"""This entire project was built following Eric Matthes PCC Book."""
+
 import sys
 import pygame as p
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
-
+from alien import Alien
 
 class AlienInvasion:
     """Class to manage game assets and behaviour"""
@@ -17,6 +19,27 @@ class AlienInvasion:
         p.display.set_caption("Alien Invasion")
         self.ship = Ship(self)
         self.bullets = p.sprite.Group()
+        self.aliens = p.sprite.Group()
+
+        self._create_fleet()
+
+
+    def _create_fleet(self):
+        """Create the fleet of aliens."""
+        # Create an alien and find the number of aliens 
+        # Spacing between each alien is one alien width
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        available_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+        
+        # Create the first row of aliens
+        for alien_number in range(number_aliens_x):
+            # Create an alien and place it in the row
+            alien = Alien(self)
+            alien.x = alien_width + 2 * alien_width * alien_number
+            alien.rect.x = alien.x
+            self.aliens.add(alien)
 
 
     def run_game(self):
@@ -38,6 +61,7 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == p.KEYUP:
                 self._check_keyup_events(event)
+
 
     def _check_keydown_events(self, event):
         """Responds to keypresses."""
@@ -70,6 +94,7 @@ class AlienInvasion:
         elif event.key == p.K_DOWN:
             self.ship.moving_down = False
 
+
     def _fire_bullet(self):
         """Creat new bullet and add it to the bullets group."""
         new_bullet = Bullet(self)
@@ -84,8 +109,7 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
-        # print(len(self.bullets))
-
+        #print(len(self.bullets))
 
 
     def _update_screen(self):
@@ -94,6 +118,7 @@ class AlienInvasion:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        self.aliens.draw(self.screen)
         p.display.flip()
 
 

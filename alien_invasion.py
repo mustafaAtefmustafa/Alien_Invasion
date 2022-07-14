@@ -1,8 +1,11 @@
 """This entire project was built following Eric Matthes PCC Book."""
 
 import sys
+from time import sleep
+
 import pygame as p
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -18,6 +21,10 @@ class AlienInvasion:
         self.screen = p.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
         p.display.set_caption("Alien Invasion")
+
+        # Create an instance to store game stats.
+        self.stats = GameStats(self)
+
         self.ship = Ship(self)
         self.bullets = p.sprite.Group()
         self.aliens = p.sprite.Group()
@@ -149,7 +156,29 @@ class AlienInvasion:
         self._check_fleet_edges()
         self.aliens.update()
 
+        # Check for collisions between aliens and ship.
+        if p.sprite.spritecollideany(self.ship, self.aliens):
+           self._ship_hit()
+
     
+    def _ship_hit(self):
+        """Respond to alien-ship collisions."""
+
+        # Decrement ships_left.
+        self.stats.ships_left -= 1
+
+        # Remove all aliens and bullets left.
+        self.bullets.empty()
+        self.aliens.empty()
+
+        # Create new fleet and center the ship.
+        self._create_fleet()
+        self.ship.center_ship()
+
+        # Pause.
+        sleep(0.5)
+
+
     def _check_bullet_alien_collisions(self):
         """Respond to bullet-alien collision"""
         # Then remove both of them.
